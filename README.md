@@ -1,11 +1,11 @@
-# Hardened-MixLoRA: protecting LLM-based applications with instruction hierarchy in LoRA-based Mixture of Experts
+# Hardened-MixLoRA: protecting LLM-based applications' instructions with a privilege-controlled mixture of low rank experts
 
-Based on [MixLORA](https://arxiv.org/html/2404.15159v1) and [Instruction Hierarchy](https://arxiv.org/abs/2404.13208)
+Based on [MixLORA](https://arxiv.org/html/2404.15159v1) and [AdapterSwap](https://arxiv.org/abs/2404.08417) with influence from [Instruction Hierarchy](https://arxiv.org/abs/2404.13208)
 <div align="left"><img src="https://raw.githubusercontent.com/TUDB-Labs/MixLoRA/main/assets/MixLoRA.png" width=60%"></div>
 
 We use MixLoRA, which constructs fine-tuning using a sparse MoE model based on LoRA. The figure above shows the architecture of the MixLoRA transformer block. MixLoRA inserts multiple LoRA-based experts within the feed-forward network block of a frozen pre-trained dense model and employs a commonly used top-k router. 
 
-We fine-tune and evaluate [meta-llama/Llama-2-7b-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) on an instruction-hierarchy version MoE-PEFT, in which only privileged instructions control the router, with an objective to freeze the router once unprivileged contents are present (aka untrusted data).
+We fine-tune and evaluate [meta-llama/Llama-2-7b-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) on an instruction-hierarchy version of MoE-PEFT, in which only privileged instructions control the router, with an objective to freeze the router once unprivileged contents are present (aka untrusted data).
 
 
 ## Acknowledgements

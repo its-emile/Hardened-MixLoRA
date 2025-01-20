@@ -157,6 +157,7 @@ class MixLoraConfig(LoraConfig):
     router_init_range_: float = None
     routing_strategy_: str = None
     jitter_noise_: float = None
+    model_scoping_: bool = False
     router_loss_: bool = True
     num_experts_: int = None
     act_fn_: Optional[Union[str, torch.nn.Module]] = None
@@ -213,6 +214,7 @@ class MixLoraConfig(LoraConfig):
         if lora_config.routing_strategy_ == "mixlora":
             lora_config.router_init_range_ = config.get("router_init_range", 0.02)
             lora_config.jitter_noise_ = config.get("jitter_noise", 0.0)
+            lora_config.model_scoping_ = config.get("model_scoping", 0.0)
             lora_config.top_k_ = config.get("top_k", 2)
         else:
             raise NotImplementedError()
@@ -229,6 +231,7 @@ class MixLoraConfig(LoraConfig):
             config["expert_lora"] = expert_config
         config["routing_strategy"] = self.routing_strategy_
         config["num_experts"] = self.num_experts_
+        config["model_scoping"] = self.model_scoping_
         if self.act_fn_ is not None and isinstance(self.act_fn_, str):
             config["act_fn"] = self.act_fn_
         if self.routing_strategy_ == "mixlora":

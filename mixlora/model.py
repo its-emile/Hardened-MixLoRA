@@ -59,6 +59,7 @@ class MixLoraSparseMoe(torch.nn.Module):
         self.num_experts_: int = config.num_experts_
         self.topk_: int = config.top_k_
         self.jitter_noise_: float = config.jitter_noise_
+        self.model_scoping: bool = config.model_scoping_
         if config.model_type_ not in _compatible_model_types:
             raise NotImplementedError()
         self.forward_fn_ = getattr(self, _compatible_model_types[config.model_type_])
@@ -203,6 +204,13 @@ class MixLoraSparseMoe(torch.nn.Module):
             hidden_states *= torch.empty_like(hidden_states).uniform_(
                 1.0 - self.jitter_noise_, 1.0 + self.jitter_noise_
             )
+        if self.model_scoping:
+            # Mask the token inputs based on system prompt boundary
+            system_prefix_length = 20
+            mask = torch.ones((batch_size, sequence_length), device=hidden_states.device)
+            mask[:, system_prefix_length:] = 0
+            mask = mask.unsqueeze(-1)  # Add extra dimension to align with hidden_states
+            hidden_states *= mask
 
         input_dtype = hidden_states.dtype
         hidden_states = hidden_states.view(-1, hidden_dim).to(self.dtype_)
